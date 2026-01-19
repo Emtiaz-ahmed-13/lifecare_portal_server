@@ -1,0 +1,67 @@
+model User {
+    id                Int        @id @default(autoincrement())
+    name              String
+    email             String     @unique
+    role              UserRole   @default(PATIENT)
+    needPasswordReset Boolean    @default(true)
+    status            UserStatus @default(ACTIVE)
+    createdAt         DateTime   @default(now())
+    updatedAt         DateTime   @default(now())
+    admin             Admin?
+    doctor            Doctor?
+    patient           Patient?
+}
+
+model Admin {
+    id            Int      @id @default(autoincrement())
+    name          String
+    email         String   @unique
+    profilePhoto  String?
+    contactNumber String?
+    isDeleted     Boolean  @default(false)
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @default(now())
+
+    user User @relation(fields: [email], references: [email])
+
+    @@map("admins")
+}
+
+model Doctor {
+    id                  Int      @id @default(autoincrement())
+    name                String
+    email               String   @unique
+    profilePhoto        String?
+    contactNumber       String
+    address             String
+    registrationNumber  String
+    experience          Int      @default(0)
+    gender              Gender
+    appointmentFee      Int
+    qualifications      String
+    currentWorkingPlace String
+    designation         String
+    isDeleted           Boolean  @default(false)
+    createdAt           DateTime @default(now())
+    updatedAt           DateTime @default(now())
+
+    user User @relation(fields: [email], references: [email])
+
+    @@map("doctors")
+}
+
+model Patient {
+    id           Int      @id @default(autoincrement())
+    name         String
+    email        String   @unique
+    role         UserRole @default(PATIENT)
+    profilePhoto String?
+    address      String?
+    isDeleted    Boolean  @default(false)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @default(now())
+
+    user User @relation(fields: [email], references: [email])
+
+    @@map("patients")
+}
