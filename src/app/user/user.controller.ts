@@ -5,7 +5,7 @@ import { UserService } from "./user.service";
 
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserService.createPatient(req.body)
+    const result = await UserService.createPatient(req.body, req.file)
 
     sendResponse(res, {
         statusCode: 201,

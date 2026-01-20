@@ -11,13 +11,18 @@
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@prisma/config": "^7.2.0",
+    "@types/multer": "^2.0.0",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "http-status": "^2.1.0",
+    "i": "^0.3.7",
+    "multer": "^2.0.2",
     "pg": "^8.17.1",
-    "prisma": "^7.2.0"
+    "prisma": "^7.2.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

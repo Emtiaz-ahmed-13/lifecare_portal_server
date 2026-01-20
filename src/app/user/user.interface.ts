@@ -1,6 +1,9 @@
 export type createPatientInput = {
-    name: string,
-    email: string,
     password: string,
-
+    patient: {
+        name: string,
+        email: string,
+        address: string,
+        profilePhoto?: string
+    }
 }
