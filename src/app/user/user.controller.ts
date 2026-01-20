@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 import catchAsync from "../shared/catchAsync";
+import sendResponse from "../shared/sendResponse";
+import { UserService } from "./user.service";
 
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
-    console.log("create patient hit");
-    res.status(201).json({
+    const result = await UserService.createPatient(req.body)
+
+    sendResponse(res, {
+        statusCode: 201,
         success: true,
-        message: "Patient created successfully!",
-        data: req.body
+        message: "Patient created successfully",
+        data: result
     })
 })
 
