@@ -22,4 +22,4 @@ router.delete(
 );
 
 
-export const scheduleRoutes = router;
+export const DoctorScheduleRoutes = router;
