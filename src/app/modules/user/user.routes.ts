@@ -2,8 +2,10 @@ import express from 'express';
 
 import { UserController } from './user.controller';
 
+import { UserRole } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { fileUploader } from '../../helper/fileUploader';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { UserValidation } from './user.validation';
 
@@ -24,6 +26,7 @@ router.post('/create-admin',
         req.body = JSON.parse(req.body.data)
         next()
     },
+    auth(UserRole.ADMIN),
     validateRequest(UserValidation.createAdminZodSchema),
     UserController.createAdmin)
 
@@ -33,7 +36,12 @@ router.post('/create-doctor',
         req.body = JSON.parse(req.body.data)
         next()
     },
+    auth(UserRole.ADMIN),
     validateRequest(UserValidation.createDoctorZodSchema),
     UserController.createDoctor)
+
+router.get('/',
+    auth(UserRole.ADMIN, UserRole.DOCTOR),
+    UserController.getAllFromDb);
 
 export const userRoutes = router;

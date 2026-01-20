@@ -1,8 +1,17 @@
 import bcrypt from 'bcryptjs';
 
 import { fileUploader } from '../../helper/fileUploader';
+import { PaginationOptions, paginationHelper } from '../../helper/paginationHelpter';
 import { prisma } from '../../shared/prisma';
+import { userSearchableFields } from './user.constant';
 import { createAdminInput, createDoctorInput, createPatientInput } from "./user.interface";
+
+export type UserFilters = {
+    searchTerm?: string;
+    role?: string;
+    status?: string;
+    email?: string;
+};
 
 const createPatient = async (payload: createPatientInput, file: any) => {
     const isUserExist = await prisma.user.findUnique({
@@ -148,8 +157,68 @@ const createDoctor = async (payload: createDoctorInput, file: any) => {
     return result;
 }
 
+const getAllFromDb = async (
+    options: PaginationOptions,
+    filters: UserFilters
+) => {
+    const { skip, take, orderBy } =
+        paginationHelper.calculatePagination(options);
+
+    const { searchTerm, role, status, email } = filters;
+
+    const andConditions: any[] = [];
+
+    // 🔍 Search (OR on searchable fields)
+    if (searchTerm) {
+        andConditions.push({
+            OR: userSearchableFields.map((field) => ({
+                [field]: {
+                    contains: searchTerm,
+                    mode: "insensitive",
+                },
+            })),
+        });
+    }
+
+    // 🎭 Role filter
+    if (role) {
+        andConditions.push({
+            role,
+        });
+    }
+
+    // 📌 Status filter
+    if (status) {
+        andConditions.push({
+            status,
+        });
+    }
+
+    // 📧 Email filter (exact match)
+    if (email) {
+        andConditions.push({
+            email,
+        });
+    }
+
+    const whereConditions =
+        andConditions.length > 0 ? { AND: andConditions } : undefined;
+
+    const result = await prisma.user.findMany({
+        skip,
+        take,
+        where: whereConditions,
+        orderBy,
+    });
+
+    return result;
+};
+
+
+
 export const UserService = {
     createPatient,
     createAdmin,
-    createDoctor
+    createDoctor,
+    getAllFromDb
 }
