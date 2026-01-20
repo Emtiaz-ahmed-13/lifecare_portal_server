@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 
+import httpStatus from 'http-status';
+import ApiError from '../../errors/ApiError';
 import { fileUploader } from '../../helper/fileUploader';
 import { PaginationOptions, paginationHelper } from '../../helper/paginationHelpter';
 import { prisma } from '../../shared/prisma';
@@ -21,7 +23,7 @@ const createPatient = async (payload: createPatientInput, file: any) => {
     });
 
     if (isUserExist) {
-        throw new Error("User with this email already exists!");
+        throw new ApiError(httpStatus.BAD_REQUEST, "User with this email already exists!");
     }
 
     if (file) {
@@ -67,7 +69,7 @@ const createAdmin = async (payload: createAdminInput, file: any) => {
     });
 
     if (isUserExist) {
-        throw new Error("User with this email already exists!");
+        throw new ApiError(httpStatus.BAD_REQUEST, "User with this email already exists!");
     }
 
     if (file) {
@@ -112,7 +114,7 @@ const createDoctor = async (payload: createDoctorInput, file: any) => {
     });
 
     if (isUserExist) {
-        throw new Error("User with this email already exists!");
+        throw new ApiError(httpStatus.BAD_REQUEST, "User with this email already exists!");
     }
 
     if (file) {

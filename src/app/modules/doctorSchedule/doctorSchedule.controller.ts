@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import httpStatus from "http-status";
+import ApiError from "../../errors/ApiError";
 import { pick } from "../../helper/pick";
 import catchAsync from "../../shared/catchAsync";
 import { prisma } from "../../shared/prisma";
@@ -10,7 +12,7 @@ import { DoctorScheduleService } from "./doctorSchedule.service";
    ========================= */
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {
-        throw new Error("Unauthorized");
+        throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
     }
 
     const user = req.user as { email: string; role: string };
