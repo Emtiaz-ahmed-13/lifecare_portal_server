@@ -18,4 +18,22 @@ router.post('/create-patient',
     validateRequest(UserValidation.createPatientZodSchema),
     UserController.createPatient)
 
+router.post('/create-admin',
+    fileUploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
+    validateRequest(UserValidation.createAdminZodSchema),
+    UserController.createAdmin)
+
+router.post('/create-doctor',
+    fileUploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
+    validateRequest(UserValidation.createDoctorZodSchema),
+    UserController.createDoctor)
+
 export const userRoutes = router;
