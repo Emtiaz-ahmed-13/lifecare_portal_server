@@ -1,9 +1,20 @@
 import bcrypt from 'bcryptjs';
-import { fileUploader } from '../helper/fileUploader';
-import { prisma } from "../shared/prisma";
+
+import { fileUploader } from '../../helper/fileUploader';
+import { prisma } from '../../shared/prisma';
 import { createPatientInput } from "./user.interface";
 
 const createPatient = async (payload: createPatientInput, file: any) => {
+    const isUserExist = await prisma.user.findUnique({
+        where: {
+            email: payload.patient.email
+        }
+    });
+
+    if (isUserExist) {
+        throw new Error("User with this email already exists!");
+    }
+
     if (file) {
         const uploadResponse: any = await fileUploader.uploadToCloudinary(file);
         payload.patient.profilePhoto = uploadResponse.secure_url;

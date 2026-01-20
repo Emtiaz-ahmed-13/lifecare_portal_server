@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import catchAsync from "../shared/catchAsync";
-import sendResponse from "../shared/sendResponse";
+
+import catchAsync from "../../shared/catchAsync";
+import sendResponse from "../../shared/sendResponse";
 import { UserService } from "./user.service";
 
 

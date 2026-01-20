@@ -9,6 +9,11 @@ enum UserRole {
   DOCTOR
 }
 
+enum UserNeedPasswordChange {
+  TRUE
+  FALSE
+}
+
 enum UserStatus {
   ACTIVE
   INACTIVE

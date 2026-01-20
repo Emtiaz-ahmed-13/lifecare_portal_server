@@ -1,9 +1,10 @@
 import express from 'express';
-import { fileUploader } from '../helper/fileUploader';
-import validateRequest from '../middlewares/validateRequest';
+
 import { UserController } from './user.controller';
 
 import { NextFunction, Request, Response } from 'express';
+import { fileUploader } from '../../helper/fileUploader';
+import validateRequest from '../../middlewares/validateRequest';
 import { UserValidation } from './user.validation';
 
 const router = express.Router();
