@@ -1,7 +1,7 @@
 set -o errexit
 
 
-bun install
-bun run build
-npx prisma generate
-npx prisma  migrate deploy
+npm install
+npm run build
+npm run db:generate
+npm run db:migrate
