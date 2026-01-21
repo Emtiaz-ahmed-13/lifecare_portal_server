@@ -5,3 +5,6 @@ dist
 *.log
 /src/generated/prisma
 ./prisma/migrations
+uploads/*
+!uploads/.gitkeep
+*.log

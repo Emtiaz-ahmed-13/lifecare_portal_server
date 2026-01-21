@@ -70,10 +70,22 @@ const addDoctorSpecialty = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const suggestDoctors = catchAsync(async (req: Request, res: Response) => {
+    const { symptoms } = req.body;
+    const result = await DoctorService.suggestDoctors(symptoms);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Doctors suggested successfully based on AI analysis",
+        data: result
+    });
+});
+
 export const DoctorController = {
     getAllFromDb,
     getByIdFromDb,
     updateIntoDb,
     deleteDoctorSpecialty,
-    addDoctorSpecialty
+    addDoctorSpecialty,
+    suggestDoctors
 };

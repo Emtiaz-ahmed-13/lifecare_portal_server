@@ -4,6 +4,10 @@
     "moduleResolution": "Node",
     "target": "ES2023",
     "strict": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "scripts", "prisma.config.ts"]
 }

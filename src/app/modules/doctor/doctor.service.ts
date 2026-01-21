@@ -1,4 +1,5 @@
 import { Doctor, Prisma } from "@prisma/client";
+import { askOpenRouter } from "../../helper/askOpenRouter";
 import { paginationHelper, PaginationOptions } from "../../helper/paginationHelpter";
 import { prisma } from "../../shared/prisma";
 import { doctorSearchableFields } from "./doctor.constant";
@@ -112,6 +113,16 @@ const updateIntoDb = async (id: number, payload: Partial<Doctor>) => {
     });
     return result;
 }
+const addDoctorSpecialty = async (id: number, payload: any) => {
+    const result = await prisma.doctorSpecialties.create({
+        data: {
+            doctorId: id,
+            specialitiesId: payload.specialitiesId
+        }
+    })
+    return result;
+}
+
 
 const deleteDoctorSpecialty = async (id: number, specialtyId: string) => {
     const result = await prisma.doctorSpecialties.delete({
@@ -125,14 +136,54 @@ const deleteDoctorSpecialty = async (id: number, specialtyId: string) => {
     return result;
 }
 
-const addDoctorSpecialty = async (id: number, payload: any) => {
-    const result = await prisma.doctorSpecialties.create({
-        data: {
-            doctorId: id,
-            specialitiesId: payload.specialitiesId
+
+
+const suggestDoctors = async (symptoms: string) => {
+    // 1. Fetch all distinct specialties
+    const allSpecialtiesRaw = await prisma.specialties.findMany({ select: { title: true } });
+    const allSpecialties = allSpecialtiesRaw.map(s => s.title).join(", ");
+
+    // 2. Ask AI to pick ONE specialty
+    const prompt = `Patient has these symptoms: "${symptoms}". Based on this, strictly pick the MOST relevant medical specialty from this list: [${allSpecialties}]. Return ONLY the exact specialty name from the list. Do not add any extra text or punctuation.`;
+
+    const suggestedSpecialty = await askOpenRouter(prompt);
+
+    if (!suggestedSpecialty) {
+        throw new Error("AI could not determine a specialty.");
+    }
+
+    // Clean up response just in case (e.g. remove quotes or extra spaces)
+    const cleanSpecialty = suggestedSpecialty.trim().replace(/^["']|["']$/g, '');
+
+    // 3. Find doctors with this specialty
+    // We already have getAllFromDb logic that filters by specialty name. Reusing logic or calling simple findMany.
+    const doctors = await prisma.doctor.findMany({
+        where: {
+            doctorSpecialties: {
+                some: {
+                    specialities: {
+                        title: {
+                            equals: cleanSpecialty,
+                            mode: 'insensitive'
+                        }
+                    }
+                }
+            },
+            isDeleted: false
+        },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialities: true
+                }
+            }
         }
-    })
-    return result;
+    });
+
+    return {
+        suggestedSpecialty: cleanSpecialty,
+        doctors
+    };
 }
 
 export const DoctorService = {
@@ -140,5 +191,6 @@ export const DoctorService = {
     getByIdFromDb,
     updateIntoDb,
     deleteDoctorSpecialty,
-    addDoctorSpecialty
+    addDoctorSpecialty,
+    suggestDoctors
 };

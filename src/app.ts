@@ -2,6 +2,7 @@ import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import { PaymentController } from "./app/modules/payment/payment.controller";
 import router from "./app/routes";
 
 const app: Application = express();
@@ -13,6 +14,8 @@ app.use(
 );
 
 //parser
+app.post('/api/v1/payment/webhook', express.raw({ type: 'application/json' }), PaymentController.webhook);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
