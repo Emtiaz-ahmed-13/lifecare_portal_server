@@ -22,7 +22,7 @@ cloudinary.config({
     api_secret: config.cloudinary.api_secret,
 });
 
-const uploadToCloudinary = async (file: Express.Multer.File) => {
+const uploadToCloudinary = async (file: Express.Multer.File): Promise<any> => {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(file.path, (err, result) => {
             if (err) {
