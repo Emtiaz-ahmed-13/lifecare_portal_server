@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: lifecare_portal_server
+    env: node
+    buildCommand: ./render-build.sh
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.10.0
