@@ -10,7 +10,11 @@ export default {
 
     jwt: {
         access_secret: process.env.ACCESS_TOKEN_SECRET as string,
+        access_expires_in: process.env.ACCESS_TOKEN_EXPIRES_IN || "1h",
         refresh_secret: process.env.REFRESH_TOKEN_SECRET as string,
+        refresh_expires_in: process.env.REFRESH_TOKEN_EXPIRES_IN || "90d",
+        reset_password_secret: process.env.RESET_PASSWORD_TOKEN_SECRET || "reset-token-secret",
+        reset_password_expires_in: process.env.RESET_PASSWORD_TOKEN_EXPIRES_IN || "10m",
     },
 
     cloudinary: {

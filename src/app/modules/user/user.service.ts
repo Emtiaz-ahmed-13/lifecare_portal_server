@@ -218,9 +218,68 @@ const getAllFromDb = async (
 
 
 
+const getMyProfile = async (user: any) => {
+    const userInfo = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: user.email,
+            status: "ACTIVE"
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: true,
+            patient: true,
+            doctor: true
+        }
+    });
+
+    return userInfo;
+}
+
+const updateMyProfile = async (user: any, payload: any, file: any) => {
+    const userInfo = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: user.email,
+            status: "ACTIVE"
+        }
+    });
+
+    if (file) {
+        const uploadResponse: any = await fileUploader.uploadToCloudinary(file);
+        payload.profilePhoto = uploadResponse.secure_url;
+    }
+
+    let profileData: any;
+
+    if (userInfo.role === 'ADMIN') {
+        profileData = await prisma.admin.update({
+            where: { email: userInfo.email },
+            data: payload
+        });
+    } else if (userInfo.role === 'DOCTOR') {
+        profileData = await prisma.doctor.update({
+            where: { email: userInfo.email },
+            data: payload
+        });
+    } else if (userInfo.role === 'PATIENT') {
+        profileData = await prisma.patient.update({
+            where: { email: userInfo.email },
+            data: payload
+        });
+    }
+
+    return profileData;
+}
+
 export const UserService = {
     createPatient,
     createAdmin,
     createDoctor,
-    getAllFromDb
+    getAllFromDb,
+    getMyProfile,
+    updateMyProfile
 }

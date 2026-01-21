@@ -11,4 +11,10 @@ router.get(
     MetaController.getDashboardStats
 );
 
+router.get(
+    '/',
+    auth(UserRole.ADMIN),
+    MetaController.getDashboardStats
+);
+
 export const MetaRoutes = router;

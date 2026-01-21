@@ -31,6 +31,56 @@ const login = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+    const { refreshToken } = req.cookies;
+    const result = await AuthService.refreshToken(refreshToken);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Access token generated successfully",
+        data: result,
+    });
+});
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user;
+    const result = await AuthService.changePassword(user, req.body);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Password changed successfully",
+        data: result,
+    });
+});
+
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+    const result = await AuthService.forgotPassword(req.body);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Password reset link sent to email",
+        data: result,
+    });
+});
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+    const result = await AuthService.resetPassword(req.body);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Password reset successfully",
+        data: result,
+    });
+});
+
 export const AuthController = {
     login,
+    refreshToken,
+    changePassword,
+    forgotPassword,
+    resetPassword,
 };

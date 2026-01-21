@@ -40,8 +40,17 @@ router.post('/create-doctor',
     validateRequest(UserValidation.createDoctorZodSchema),
     UserController.createDoctor)
 
-router.get('/',
-    auth(UserRole.ADMIN, UserRole.DOCTOR),
-    UserController.getAllFromDb);
+router.get('/me',
+    auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    UserController.getMyProfile);
+
+router.patch('/update-my-profile',
+    auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    fileUploader.upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
+    UserController.updateMyProfile);
 
 export const userRoutes = router;
