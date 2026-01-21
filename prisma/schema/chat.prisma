@@ -1,22 +1,13 @@
 model ChatMessage {
-    id            String   @id @default(uuid())
-    senderId      Int
-    receiverId    Int
-    appointmentId String
-    message       String
-    createdAt     DateTime @default(now())
+  id            String      @id @default(uuid())
+  senderId      Int
+  receiverId    Int
+  appointmentId String
+  message       String
+  createdAt     DateTime    @default(now())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  receiver      User        @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender        User        @relation("SentMessages", fields: [senderId], references: [id])
 
-    appointment Appointment @relation(fields: [appointmentId], references: [id])
-
-    // We strictly link to User (Patient or Doctor) via ID conceptually, 
-    // but Prisma relations might be tricky if sender can be either.
-    // For simplicity, we just store indices. 
-    // Or we could link to 'User' model if we had a unified one, 
-    // but we have separate Patient/Doctor tables and a User table.
-    // Let's link to the base 'User' table since that has unique IDs across roles?
-    // Actually, `User` table has `id`.
-    sender   User @relation("SentMessages", fields: [senderId], references: [id])
-    receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
-
-    @@map("chat_messages")
+  @@map("chat_messages")
 }

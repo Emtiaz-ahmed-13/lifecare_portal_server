@@ -1,25 +1,24 @@
 model Schedule {
-    id              String           @id @default(cuid())
-    startDate       DateTime         @default(now())
-    endDate         DateTime
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
-    doctorSchedules DoctorSchedule[]
+  id              String          @id @default(cuid())
+  startDate       DateTime        @default(now())
+  endDate         DateTime
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  doctorSchedules DoctorSchedule?
 
-    @@map("schedule")
+  @@map("schedule")
 }
 
 model DoctorSchedule {
-    scheduleId String   @unique
-    doctorId   Int
-    isBooked   Boolean  @default(false)
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  scheduleId  String       @unique
+  doctorId    Int
+  isBooked    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  appointment Appointment?
+  doctor      Doctor       @relation(fields: [doctorId], references: [id])
+  schedule    Schedule     @relation(fields: [scheduleId], references: [id])
 
-    schedule    Schedule     @relation(fields: [scheduleId], references: [id])
-    doctor      Doctor       @relation(fields: [doctorId], references: [id])
-    appointment Appointment?
-
-    @@id([scheduleId, doctorId])
-    @@map("doctor_schedule")
+  @@id([scheduleId, doctorId])
+  @@map("doctor_schedule")
 }
