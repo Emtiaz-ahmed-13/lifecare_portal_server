@@ -8,30 +8,30 @@ import { doctorScheduleValidationSchema } from "./doctorSchedule.validation";
 const router = express.Router();
 
 router.post(
-    "/",
-    auth(UserRole.DOCTOR),
-    validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
-    DoctorScheduleController.insertIntoDB
+  "/",
+  auth(UserRole.DOCTOR),
+  validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
+  DoctorScheduleController.insertIntoDB,
 );
 
 router.get(
-    "/",
+  "/",
 
-    DoctorScheduleController.getAllFromDB
+  DoctorScheduleController.getAllFromDB,
 );
 
 router.get(
-    "/doctor",
-    auth(UserRole.DOCTOR),
-    validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
-    DoctorScheduleController.schedulesForDoctor
+  "/doctor",
+  auth(UserRole.DOCTOR),
+  validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
+  DoctorScheduleController.schedulesForDoctor,
 );
 
 router.delete(
-    "/:id",
-    auth(UserRole.ADMIN),
-    validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
-    DoctorScheduleController.deleteScheduleFromDB
+  "/:id",
+  auth(UserRole.ADMIN),
+  validateRequest(doctorScheduleValidationSchema.doctorScheduleValidation),
+  DoctorScheduleController.deleteScheduleFromDB,
 );
 
 export const doctorScheduleRoutes = router;

@@ -3,23 +3,10 @@ import { ScheduleController } from "./schedule.controller";
 
 const router = express.Router();
 
-router.post(
-    "/",
-    ScheduleController.insertIntoDB
-);
+router.post("/", ScheduleController.insertIntoDB);
 
-router.get(
-    "/",
-    ScheduleController.getAllFromDB
-);
-router.get(
-    "/doctor",
-    ScheduleController.schedulesForDoctor
-);
-router.delete(
-    "/:id",
-    ScheduleController.deleteScheduleFromDB
-);
-
+router.get("/", ScheduleController.getAllFromDB);
+router.get("/doctor", ScheduleController.schedulesForDoctor);
+router.delete("/:id", ScheduleController.deleteScheduleFromDB);
 
 export const DoctorScheduleRoutes = router;
